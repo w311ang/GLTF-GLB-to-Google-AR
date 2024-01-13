@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<!-- Created with the assistance of OpenAI's ChatGPT -->
+<html>
+<head>
+    <title>Open GLTF/GLB in Google AR</title>
+    <script>
+        function openInAR() {
+            var url = document.getElementById('gltfUrl').value;
+            if (url) {
+                // Constructing the Google AR URL
+                var arUrl = 'intent://arvr.google.com/scene-viewer/1.0?file=' + encodeURIComponent(url) +
+                            '#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;';
+                window.open(arUrl, '_blank');
+            }
+        }
+    </script>
+</head>
+<body>
+    <h2>Enter the URL of the GLTF or GLB File</h2>
+    <input type="text" id="gltfUrl" placeholder="Enter GLTF or GLB file URL here" style="width: 80%;">
+    <button onclick="openInAR()">Open in Google AR</button>
+</body>
+</html>
