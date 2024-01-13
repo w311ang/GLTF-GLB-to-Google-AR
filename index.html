@@ -2,29 +2,10 @@
 <!-- Created with the assistance of OpenAI's ChatGPT -->
 <html>
 <head>
-    <title>Open GLTF/GLB in Google AR</title>
+    <title>Open or Upload GLTF/GLB in Google AR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        #gltfUrl {
-            width: 90%;
-            max-width: 500px; /* Limits the maximum width on larger screens */
-            margin-bottom: 10px;
-        }
-        button {
-            width: 90%;
-            max-width: 500px;
-            padding: 10px;
-        }
+        /* 添加您的样式 */
     </style>
     <script>
         function openInAR() {
@@ -35,11 +16,36 @@
                 window.open(arUrl, '_blank');
             }
         }
+
+        function uploadAndOpenInAR() {
+            var fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length > 0) {
+                var file = fileInput.files[0];
+                var url = 'https://ppng.io/' + file.name;
+
+                var arUrl = 'intent://arvr.google.com/scene-viewer/1.0?file=' + encodeURIComponent(url) +
+                            '#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;';
+                
+                fetch(url, {
+                    method: 'PUT',
+                    body: file
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+
+                window.open(arUrl, '_blank');
+            }
+        }
     </script>
 </head>
 <body>
-    <h2>Enter the URL of the GLTF or GLB File</h2>
+    <h2>Open a GLTF or GLB File in Google AR</h2>
     <input type="text" id="gltfUrl" value="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf" placeholder="Enter GLTF or GLB file URL here">
-    <button onclick="openInAR()">Open in Google AR</button>
+    <button onclick="openInAR()">Open URL in Google AR</button>
+    <hr>
+    <h2>Or Upload a GLTF or GLB File</h2>
+    <input type="file" id="fileInput">
+    <button onclick="uploadAndOpenInAR()">Upload and Open in Google AR</button>
 </body>
 </html>
