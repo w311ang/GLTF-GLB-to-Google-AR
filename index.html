@@ -39,7 +39,7 @@
             var fileInput = document.getElementById('localFileInput');
             if (fileInput.files.length > 0) {
                 var file = fileInput.files[0];
-                var url = 'http://localhost:1054/' + file.name;
+                var url = 'http://127.0.0.1:1054/' + file.name;
                 openAR(url);
             }
         }
