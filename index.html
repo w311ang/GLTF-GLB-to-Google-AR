@@ -1,20 +1,29 @@
 <!DOCTYPE html>
-<!-- Created with the assistance of OpenAI's ChatGPT -->
 <html>
 <head>
     <title>Open or Upload GLTF/GLB in Google AR</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        /* 添加您的样式 */
-    </style>
+</head>
+<body>
+    <h2>Open a GLTF or GLB File in Google AR</h2>
+    <input type="text" id="gltfUrl" placeholder="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf" />
+    <button onclick="openInAR()">Open URL in Google AR</button>
+    <hr>
+    <h2>Or Upload a GLTF or GLB File</h2>
+    <input type="file" id="fileInput">
+    <button onclick="uploadAndOpenInAR()">Upload and Open in Google AR</button>
+    <hr>
+    <h2>Or Select a Local File</h2>
+    <input type="file" id="localFileInput">
+    <button onclick="openLocalFileInAR()">Open Local File in Google AR</button>
+
     <script>
         function openInAR() {
             var url = document.getElementById('gltfUrl').value;
-            if (url) {
-                var arUrl = 'intent://arvr.google.com/scene-viewer/1.0?file=' + encodeURIComponent(url) +
-                            '#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;';
-                window.open(arUrl, '_blank');
+            if (!url) {
+                url = 'https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf'; // 默认URL
             }
+            openAR(url);
         }
 
         function uploadAndOpenInAR() {
@@ -22,30 +31,36 @@
             if (fileInput.files.length > 0) {
                 var file = fileInput.files[0];
                 var url = 'https://ppng.io/' + file.name;
-
-                var arUrl = 'intent://arvr.google.com/scene-viewer/1.0?file=' + encodeURIComponent(url) +
-                            '#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;';
-                
-                fetch(url, {
-                    method: 'PUT',
-                    body: file
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-
-                window.open(arUrl, '_blank');
+                uploadFile(file, url);
             }
         }
+
+        function openLocalFileInAR() {
+            var fileInput = document.getElementById('localFileInput');
+            if (fileInput.files.length > 0) {
+                var file = fileInput.files[0];
+                var url = 'http://localhost:1054/' + file.name;
+                openAR(url);
+            }
+        }
+
+        function uploadFile(file, url) {
+            fetch(url, {
+                method: 'PUT',
+                body: file
+            }).then(() => {
+                openAR(url);
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function openAR(url) {
+            var arUrl = 'intent://arvr.google.com/scene-viewer/1.0?file=' + encodeURIComponent(url) +
+                        '#Intent;scheme=https;package=com.google.android.googlequicksearchbox;action=android.intent.action.VIEW;S.browser_fallback_url=https://developers.google.com/ar;end;';
+            console.log("Generated AR URL:", url);  // 在控制台打印拼接好的链接
+            window.open(arUrl, '_blank');
+        }
     </script>
-</head>
-<body>
-    <h2>Open a GLTF or GLB File in Google AR</h2>
-    <input type="text" id="gltfUrl" value="https://raw.githubusercontent.com/KhronosGroup/glTF-Sample-Models/master/2.0/Avocado/glTF/Avocado.gltf" placeholder="Enter GLTF or GLB file URL here">
-    <button onclick="openInAR()">Open URL in Google AR</button>
-    <hr>
-    <h2>Or Upload a GLTF or GLB File</h2>
-    <input type="file" id="fileInput">
-    <button onclick="uploadAndOpenInAR()">Upload and Open in Google AR</button>
 </body>
 </html>
